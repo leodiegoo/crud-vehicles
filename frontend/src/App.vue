@@ -1,23 +1,34 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          CRUD Vehicles
+        </a>
+        <a class="navbar-item" href="/#/vehicles">
+          Vehicles
+        </a>
+        <a class="navbar-item" href="/#/vehicleTypes">
+          Vehicle Types
+        </a>
+      </div>
+    </nav>
+    <div id="content" class="content">
+      <router-view/>
+    </div>
   </div>
 </template>
 
+
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    name: 'App'
+  }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 </style>

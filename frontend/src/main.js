@@ -3,8 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import VueLodash from 'vue-lodash'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+const production = process.env.NODE_ENV === 'production';
+
+let splitURL = window.location.href.split('/');
+const baseURL = production ? `${splitURL[0]}/api/v1/` : 'http://localhost:8080/api/v1/';
+Vue.use(VueAxios, axios.create({
+  baseURL: baseURL
+}));
+Vue.use(VueLodash);
 
 /* eslint-disable no-new */
 new Vue({
@@ -12,4 +23,4 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
-})
+});
