@@ -39,6 +39,6 @@ public class VehicleServiceImpl extends CrudServiceImpl<Vehicle, Long> implement
         if (vehicle.getIdVehicleType() != null) {
             vehicleOptional.get().setIdVehicleType(vehicle.getIdVehicleType());
         }
-        return this.salvar(vehicleOptional.get());
+        return vehicleRepository.save(vehicleOptional.get());
     }
 }
