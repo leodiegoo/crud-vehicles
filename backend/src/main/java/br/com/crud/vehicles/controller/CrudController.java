@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600L)
 public abstract class CrudController<T, PK> {
 
     protected abstract CrudService<T, PK> getService();
