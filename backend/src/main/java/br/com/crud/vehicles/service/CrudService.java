@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface CrudService<T, PK> extends Serializable {
 
-    void salvar(T entidade);
+    T salvar(T entidade);
 
     void deletar(PK id);
 
@@ -13,4 +13,5 @@ public interface CrudService<T, PK> extends Serializable {
 
     List<T> buscarTodos();
 
+    T put(PK id, T entidade);
 }
