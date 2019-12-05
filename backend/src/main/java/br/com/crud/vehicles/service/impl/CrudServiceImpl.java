@@ -1,25 +1,19 @@
 package br.com.crud.vehicles.service.impl;
 
+import br.com.crud.vehicles.repository.JOOQRepository;
 import br.com.crud.vehicles.service.CrudService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class CrudServiceImpl<T, PK> implements CrudService<T, PK> {
 
-    protected abstract JpaRepository<T, PK> getRepository();
-
-    @Autowired
-    private EntityManager entityManager;
+    protected abstract JOOQRepository<T, PK> getRepository();
 
     @Override
     public T buscarPorId(PK id) {
-        Optional<T> t = getRepository().findById(id);
-        return t.orElse(null);
+        T t = getRepository().findById(id);
+        return t;
     }
 
     @Override
@@ -29,14 +23,13 @@ public abstract class CrudServiceImpl<T, PK> implements CrudService<T, PK> {
 
     @Override
     public void deletar(PK id) {
-        getRepository().delete(buscarPorId(id));
+        getRepository().delete(id);
     }
 
     @Override
     @Transactional
     public T salvar(T entidade) {
-        T saved = getRepository().saveAndFlush(entidade);
-        entityManager.refresh(saved);
+        T saved = getRepository().add(entidade);
         return saved;
     }
 }

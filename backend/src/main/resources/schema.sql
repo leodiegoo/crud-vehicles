@@ -1,34 +1,21 @@
 DROP TABLE IF EXISTS VEHICLE_TYPE, VEHICLE;
 
 
-create table VEHICLE_TYPE
+create table if not exists VEHICLES_TYPES
 (
-    ID     bigint,
+    ID     bigint primary key auto_increment not null,
     "DESC" VARCHAR(255),
     NAME   VARCHAR(255)
 );
 
-create unique index VEHICLE_TYPE_ID_uindex
-    on VEHICLE_TYPE (ID);
-
-alter table VEHICLE_TYPE
-    add constraint VEHICLE_TYPE_pk
-        primary key (ID);
-
-create table VEHICLE
+create table if not exists  VEHICLES
 (
     ID              bigint not null
-        constraint vehicle_pk
-            primary key
-        constraint vehicle_vehicle_type_id_fk
-            references vehicle_type,
+        constraint vehicles_pk
+            primary key auto_increment,
     "DESC"          varchar(255),
-    ID_VEHICLE_TYPE integer,
+    ID_VEHICLE_TYPE bigint,
     NAME            varchar(255),
     PLATE           varchar(255)
 );
 
-alter table VEHICLE owner to postgres;
-
-create unique index VEHICLE_ID_uindex
-    on VEHICLE (ID);
