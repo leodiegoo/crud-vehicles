@@ -25,17 +25,17 @@ public class VehicleServiceImpl extends CrudServiceImpl<Vehicle, Long> implement
         if (vehicleDb == null) {
             return null;
         }
-        if (!StringUtils.isEmpty(vehicleDb.getDesc())) {
-            vehicleDb.setDesc(vehicleDb.getDesc());
+        if (!StringUtils.isEmpty(vehicle.getDesc())) {
+            vehicleDb.setDesc(vehicle.getDesc());
         }
-        if (!StringUtils.isEmpty(vehicleDb.getName())) {
-            vehicleDb.setName(vehicleDb.getName());
+        if (!StringUtils.isEmpty(vehicle.getName())) {
+            vehicleDb.setName(vehicle.getName());
         }
-        if (!StringUtils.isEmpty(vehicleDb.getPlate())) {
-            vehicleDb.setPlate(vehicleDb.getPlate());
+        if (!StringUtils.isEmpty(vehicle.getPlate())) {
+            vehicleDb.setPlate(vehicle.getPlate());
         }
-        if (vehicleDb.getIdVehicleType() != null) {
-            vehicleDb.setIdVehicleType(vehicleDb.getIdVehicleType());
+        if (vehicle.getIdVehicleType() != null) {
+            vehicleDb.setIdVehicleType(vehicle.getIdVehicleType());
         }
         return getRepository().update(vehicleDb);
     }
