@@ -10,7 +10,7 @@
             <crud-input label="Name" v-model="form.name"></crud-input>
             <crud-input label="Description" v-model="form.desc"></crud-input>
             <crud-select label="Type" v-model="form.idVehicleType"
-                         :list-data="listVehicleTypes" value-option="id" label-option="name"
+                         :list-data="vehicles_types" value-option="id" label-option="name"
                          placeholder="Select a Vehicle"
             ></crud-select>
             <crud-input label="Plate" v-model="form.plate"></crud-input>
@@ -24,6 +24,8 @@
 
 
 <script>
+  import {db} from '../../main';
+
   export default {
     name: 'VehicleForm',
     data: () => ({
@@ -34,59 +36,37 @@
         plate: '',
         vehicleType: {}
       },
-      listVehicleTypes: [],
+      vehicles_types: [],
       titlePage: 'Add new vehicle',
       isUpdating: false
     }),
+    firestore() {
+      return {
+        vehicles_types: db.collection('vehicletype')
+      }
+    },
     methods: {
       save() {
         const loadingComponent = this.$loading.open({
           container: null
         });
-        let form = this.form;
+        let form = {...this.form};
         delete form.vehicleType;
+        delete form.id;
         if (this.isUpdating) {
-          this.axios.put(`/vehicles/${form.id}`, form).then(resp => {
-            if (resp.data.success) {
-              this.$toast.open({
-                message: 'Vehicle updated successfully',
-                type: 'is-success'
-              });
-            } else {
-              this.$toast.open({
-                message: response.data.message,
-                type: 'is-danger',
-                position: 'is-bottom',
-              });
-            }
-          }).catch((err) => {
+          db.collection('vehicle').doc(this.form.id).set(form).then(() => {
             this.$toast.open({
-              message: err.response.data.message,
-              type: 'is-danger',
-              position: 'is-bottom',
+              message: 'Vehicle updated successfully',
+              type: 'is-success'
             });
           }).finally(() => {
             loadingComponent.close();
           });
         } else {
-          this.axios.post(`/vehicles`, form).then(resp => {
-            if (resp.data.success) {
-              this.$toast.open({
-                message: 'Vehicle created successfully',
-                type: 'is-success'
-              });
-            } else {
-              this.$toast.open({
-                message: response.data.message,
-                type: 'is-danger',
-                position: 'is-bottom',
-              });
-            }
-          }).catch((err) => {
+          db.collection('vehicle').add(form).then(() => {
             this.$toast.open({
-              message: err.response.data.message,
-              type: 'is-danger',
-              position: 'is-bottom',
+              message: 'Vehicle updated successfully',
+              type: 'is-success'
             });
           }).finally(() => {
             loadingComponent.close();
@@ -97,10 +77,9 @@
         const loadingComponent = this.$loading.open({
           container: null
         });
-        this.axios(`/vehicles/${id}`).then(resp => {
-          if (resp.data.success) {
-            this.updateForm(resp.data.model)
-          }
+        db.collection('vehicle').doc(id).get().then(resp => {
+          this.updateForm(resp.data());
+          this.form.id = id;
         }).finally(() => {
           loadingComponent.close();
         });
@@ -108,18 +87,6 @@
       updateForm(data) {
         this.form = data;
       },
-      getVehicleTypes() {
-        const loadingComponent = this.$loading.open({
-          container: null
-        });
-        this.axios(`/vehicleTypes`).then(resp => {
-          if (resp.data.success) {
-            this.listVehicleTypes = resp.data.model;
-          }
-        }).finally(() => {
-          loadingComponent.close();
-        });
-      }
     },
     mounted() {
       const query = this.$route.query;
@@ -128,7 +95,6 @@
         this.titlePage = "Update vehicle";
         this.isUpdating = true;
       }
-      this.getVehicleTypes();
     }
   }
 </script>
