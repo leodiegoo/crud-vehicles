@@ -19,6 +19,8 @@
 
 
 <script>
+  import {db} from '../../main';
+
   export default {
     name: 'VehicleTypeForm',
     data: () => ({
@@ -35,49 +37,22 @@
         const loadingComponent = this.$loading.open({
           container: null
         });
-        let form = this.form;
+        let form = {...this.form};
+        delete form.id;
         if (this.isUpdating) {
-          this.axios.put(`/vehicleTypes/${form.id}`, form).then(resp => {
-            if (resp.data.success) {
-              this.$toast.open({
-                message: 'Type updated successfully',
-                type: 'is-success'
-              });
-            } else {
-              this.$toast.open({
-                message: response.data.message,
-                type: 'is-danger',
-                position: 'is-bottom',
-              });
-            }
-          }).catch((err) => {
+          db.collection('vehicletype').doc(this.form.id).set(form).then(() => {
             this.$toast.open({
-              message: err.response.data.message,
-              type: 'is-danger',
-              position: 'is-bottom',
+              message: 'Type updated successfully',
+              type: 'is-success'
             });
           }).finally(() => {
             loadingComponent.close();
           });
         } else {
-          this.axios.post(`/vehicleTypes`, form).then(resp => {
-            if (resp.data.success) {
-              this.$toast.open({
-                message: 'Type created successfully',
-                type: 'is-success'
-              });
-            } else {
-              this.$toast.open({
-                message: response.data.message,
-                type: 'is-danger',
-                position: 'is-bottom',
-              });
-            }
-          }).catch((err) => {
+          db.collection('vehicletype').add(form).then(() => {
             this.$toast.open({
-              message: err.response.data.message,
-              type: 'is-danger',
-              position: 'is-bottom',
+              message: 'Type updated successfully',
+              type: 'is-success'
             });
           }).finally(() => {
             loadingComponent.close();
@@ -88,10 +63,9 @@
         const loadingComponent = this.$loading.open({
           container: null
         });
-        this.axios(`/vehicleTypes/${id}`).then(resp => {
-          if (resp.data.success) {
-            this.updateForm(resp.data.model)
-          }
+        db.collection('vehicletype').doc(id).get().then(resp => {
+          this.updateForm(resp.data());
+          this.form.id = id;
         }).finally(() => {
           loadingComponent.close();
         });

@@ -12,10 +12,13 @@
   "dependencies": {
     "axios": "^0.19.0",
     "buefy": "^0.7.7",
+    "firebase": "^7.5.1",
+    "firebase-functions": "^3.3.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
     "vue-lodash": "^2.0.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuefire": "^2.2.0-alpha.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

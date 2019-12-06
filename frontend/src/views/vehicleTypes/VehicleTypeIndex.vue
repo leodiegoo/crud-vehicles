@@ -9,52 +9,45 @@
     </crud-section-container>
     <crud-button type="is-info" @click="editVehicleType"><span>Edit selected</span></crud-button>
     <crud-button type="is-danger" @click="deleteVehicleType"><span>Delete selected</span></crud-button>
-    <crud-table ref="listVehicleTypes" focusable :list-data="listData" :columns="columns" style="margin-top: 10px;"/>
+    <crud-table ref="listVehicleTypes" focusable :list-data="vehicles_types" :columns="columns"
+                style="margin-top: 10px;"/>
   </section>
 </template>
 
 <script>
+  import {db} from '../../main';
+
   export default {
     name: 'VehicleTypeIndex',
-    data: () => ({
-      listData: [],
-      columns: [
-        {
-          field: 'id',
-          label: 'ID',
-          width: '40',
-          numeric: true
-        },
-        {
-          field: 'name',
-          label: 'Name',
-        },
-        {
-          field: 'desc',
-          label: 'Description',
-        }
-      ]
-    }),
-    created() {
-      this.$nextTick(() => {
-        this.updateGrid();
-      });
+    data() {
+      return {
+        columns: [
+          {
+            field: 'id',
+            label: 'ID',
+            width: '40',
+            numeric: true
+          },
+          {
+            field: 'name',
+            label: 'Name',
+          },
+          {
+            field: 'desc',
+            label: 'Description',
+          }
+        ],
+        vehicles_types: []
+      }
+    },
+    firestore() {
+      return {
+        vehicles_types: db.collection('vehicletype')
+      }
     },
     methods: {
       toForm() {
         this.$router.push({path: '/vehicleTypes/form'})
-      },
-      updateGrid() {
-        const loadingComponent = this.$loading.open({
-          container: null
-        });
-        this.axios(`/vehicleTypes`).then(resp => {
-          if (resp.data.success) {
-            this.listData = resp.data.model;
-          }
-        }).finally(() => {
-          loadingComponent.close();
-        });
       },
       editVehicleType($event) {
         let vehicleTypeSelected = this.$refs.listVehicleTypes.getSelected();
@@ -79,26 +72,10 @@
               const loadingComponent = this.$loading.open({
                 container: null
               });
-              this.axios.delete(`vehicleTypes/${vehicleTypeSelected.id}`).then(resp => {
-                if (resp.data.success) {
-                  this.$toast.open({
-                    message: 'Type deleted successfully',
-                    type: 'is-success'
-                  });
-                  this.$refs.listVehicleTypes.clearSelected();
-                  this.updateGrid();
-                } else {
-                  this.$toast.open({
-                    message: response.data.message,
-                    type: 'is-danger',
-                    position: 'is-bottom',
-                  });
-                }
-              }).catch((err) => {
+              db.collection('vehicletype').doc(vehicleTypeSelected.id).delete().then(() => {
                 this.$toast.open({
-                  message: err.response.data.message,
-                  type: 'is-danger',
-                  position: 'is-bottom',
+                  message: 'Type deleted successfully',
+                  type: 'is-success'
                 });
               }).finally(() => {
                 loadingComponent.close();

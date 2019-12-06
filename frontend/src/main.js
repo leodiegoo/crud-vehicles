@@ -7,6 +7,14 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLodash from 'vue-lodash'
 
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import { firestorePlugin } from 'vuefire'
+
+Vue.use(firestorePlugin)
+
+export const db = firebase.initializeApp({projectId: 'vehicle-90e43'}).firestore()
+
 Vue.config.productionTip = false;
 const production = process.env.NODE_ENV === 'production';
 
@@ -21,6 +29,6 @@ Vue.use(VueLodash);
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 });
